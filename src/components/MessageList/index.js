@@ -1,5 +1,5 @@
 import React, { Component, Children, PropTypes } from 'react';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom';
 import MessagePropTypes from '../Message/propTypes';
 import store from '../../store';
 
@@ -21,7 +21,7 @@ export default class MessageList extends Component {
           this.messages.map(message => {
             return (
               <li key={message.title}>
-                <Link to={`/messages/${message.title}`}>{message.title}</Link>
+                <Link to={`${this.props.match.url}/${message.title}`}>{message.title}</Link>
               </li>
             );
           })

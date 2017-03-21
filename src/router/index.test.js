@@ -1,14 +1,32 @@
 import React from 'react';
-import { IndexLink, Link, createMemoryHistory, location } from 'react-router';
+import { MemoryRouter as Router, NavLink, Link } from 'react-router-dom';
 import { mount } from 'enzyme';
-import AppRouter from './index';
+import App from '../container/App';
 
-const history = createMemoryHistory(location);
+function mountApp() {
+  return mount(
+    <Router>
+      <App />
+    </Router>
+  );
+}
 
 function clickLink(link) {
   link.simulate('click', {
     button: 0
   });
+}
+
+function getClassNames(wrapper) {
+  return (wrapper.getNode().className || '').split(' ');
+}
+
+function expectHasClassName(wrapper, className) {
+  expect(getClassNames(wrapper)).toContain(className);
+}
+
+function expectNotHasClassName(wrapper, className) {
+  expect(getClassNames(wrapper)).not.toContain(className);
 }
 
 function gotoHome(wrapper) {
@@ -20,22 +38,22 @@ function gotoHome(wrapper) {
 
 describe.only('<AppRouter />', () => {
   it('should render AppRouter', () => {
-    const wrapper = mount(<AppRouter history={history} />);
+    const wrapper = mountApp();
 
     expect(wrapper.find('.container .content').text()).toBe('首页');
 
     const links = wrapper.find('.container .nav li a');
     expect(links.length).toBe(2);
     expect(links.at(0).text()).toBe('首页');
-    expect(links.at(0).getNode().className).toBe('active');
+    expectHasClassName(links.at(0), 'active');
 
     let messagesLink = links.at(1);
     expect(messagesLink.text()).toBe('消息');
-    expect(messagesLink.getNode().className).not.toBe('active');
+    expectNotHasClassName(messagesLink, 'active');
   });
 
   it('should navigate to messages page when click message link', () => {
-    const wrapper = mount(<AppRouter history={history} />);
+    const wrapper = mountApp();
 
     let links = wrapper.find(Link);
     expect(links.length).toBe(2);
@@ -49,18 +67,18 @@ describe.only('<AppRouter />', () => {
 
     // home link is not active now
     expect(links.at(0).text()).toBe('首页');
-    expect(links.at(0).getNode().className).not.toBe('active');
+    expectNotHasClassName(links.at(0), 'active');
     // messages link is active now
     messagesLink = links.at(1);
     expect(messagesLink.text()).toBe('消息');
-    expect(messagesLink.getNode().className).toBe('active');
+    expectHasClassName(messagesLink, 'active');
 
     const messageItemLinks = wrapper.find('.container .content').find(Link);
     expect(messageItemLinks.length).toBe(3);
   });
 
   it('should navigate to message detail page when click message item link', () => {
-    const wrapper = mount(<AppRouter history={history} />);
+    const wrapper = mountApp();
     gotoHome(wrapper);
 
     let links = wrapper.find(Link);
@@ -74,11 +92,11 @@ describe.only('<AppRouter />', () => {
     expect(links.length).toBe(2);
     // home link is not active now
     expect(links.at(0).text()).toBe('首页');
-    expect(links.at(0).getNode().className).not.toBe('active');
+    expectNotHasClassName(links.at(0), 'active');
     // messages link is active now
     messagesLink = links.at(1);
     expect(messagesLink.text()).toBe('消息');
-    expect(messagesLink.getNode().className).toBe('active');
+    expectHasClassName(messagesLink, 'active');
 
     const messageItemLinks = wrapper.find('.container .content').find(Link);
     expect(messageItemLinks.length).toBe(3);
@@ -88,11 +106,11 @@ describe.only('<AppRouter />', () => {
     expect(links.length).toBe(2);
     // home link is not active now
     expect(links.at(0).text()).toBe('首页');
-    expect(links.at(0).getNode().className).not.toBe('active');
+    expectNotHasClassName(links.at(0), 'active');
     // messages link is not active now
     messagesLink = links.at(1);
     expect(messagesLink.text()).toBe('消息');
-    expect(messagesLink.getNode().className).not.toBe('active');
+    expectNotHasClassName(messagesLink, 'active');
 
     expect(wrapper.find('.container .content h1').text()).toBe('zhufeng');
     expect(wrapper.find('.container .content p').text()).toBe('zhufeng react');

@@ -1,5 +1,4 @@
 import React, { Component, Children, PropTypes } from 'react';
-import { Link } from 'react-router';
 import MessagePropTypes from './propTypes';
 import store from '../../store';
 
@@ -8,12 +7,8 @@ export default class Message extends Component {
     data: MessagePropTypes
   }
 
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const message = store.getMessage(this.props.params.title);
+    const message = store.getMessage(this.props.match.params.title);
     if (!message) {
       return null;
     }

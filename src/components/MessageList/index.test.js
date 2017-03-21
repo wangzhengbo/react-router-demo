@@ -1,12 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router';
+import { MemoryRouter as Router, Link } from 'react-router-dom';
 import { mount } from 'enzyme';
 import MessageList from './index';
 import store from '../../store';
 
 describe('<MessageList />', () => {
   it(`should render three messages`, () => {
-    const wrapper = mount(<MessageList />);
+    const wrapper = mount(
+      <Router>
+        <MessageList match={{url: '/messages'}} />
+      </Router>
+    );
 
     const links = wrapper.find(Link);
     const messages = store.listMessages();
